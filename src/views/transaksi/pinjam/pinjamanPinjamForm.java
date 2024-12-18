@@ -16,6 +16,13 @@ import javax.swing.JOptionPane;
 import database.DMLSQL;
 import database.DatabaseManager;
 import database.UserID;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.HashMap;
+import java.util.Locale;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 import views.layout;
 
 /**
@@ -105,6 +112,7 @@ public class pinjamanPinjamForm extends javax.swing.JPanel {
             Object[] insertValues = {uuid.toString(),UserID.getUserId(),anggota.getValue(),jenis.getValue(),new SimpleDateFormat("yyyy-MM-dd").format(tglInput.getDate()),keteranganInput.getText(),jumlahTenorInput.getText(),jumlahInput.getText(),jumlahCicilanInput.getText()};
             dmlSql.insertData("pinjaman", insertColumns, insertValues);
             dbManager.close();
+            print(uuid.toString(),new SimpleDateFormat("EEEE, dd MMMM yyyy",new Locale("id", "ID")).format(tglInput.getDate()));
             JOptionPane.showMessageDialog(null, "Data Berhasil Disimpan!");
             pinjamanList pinjamanList = new pinjamanList();
             pinjamanList.layout = layout;
@@ -115,6 +123,19 @@ public class pinjamanPinjamForm extends javax.swing.JPanel {
             parent.datatable();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Query Fail. "+e.getMessage());
+        }
+    }
+    
+    private void print(String id,String date) {
+        try {
+            String path = "./src/report/notaPinjam.jasper";
+            HashMap parameter = new HashMap();
+            parameter.put("ID",id);
+            parameter.put("DATE",date);
+            JasperPrint print = JasperFillManager.fillReport(path,parameter,dbManager.getConnection());
+            JasperViewer.viewReport(print, false);
+        } catch (Exception err) {
+            JOptionPane.showMessageDialog(null, "Gagal View Nota. "+err);
         }
     }
 

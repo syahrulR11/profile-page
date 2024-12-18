@@ -90,7 +90,7 @@ public class pinjamanAngsurList extends javax.swing.JPanel {
         Object[] Baris = {"ID","NO Tenor","Tanggal","Jumlah"};
         tableModel = new DefaultTableModel(null,Baris);
         try {
-            String[] columnsToSelect = {"angsur_pinjaman.id","angsur_pinjaman.no_tenor","angsur_pinjaman.tanggal","angsur_pinjaman.jumlah_cicilan"};
+            String[] columnsToSelect = {"angsur_pinjaman.id","angsur_pinjaman.no_tenor","angsur_pinjaman.tanggal","CONCAT('Rp ', REPLACE(FORMAT(angsur_pinjaman.jumlah_cicilan, 0), ',', '.'))"};
             String[] joinTable = {"pinjaman"};
             String[] joinCondition = {"pinjaman.id = angsur_pinjaman.id_pinjaman"};
             String[] conditionColumns = {"pinjaman.id"};

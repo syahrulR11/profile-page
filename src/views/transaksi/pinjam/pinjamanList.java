@@ -66,7 +66,7 @@ public class pinjamanList extends javax.swing.JPanel {
         tableModel = new DefaultTableModel(null,Baris);
         String search = cariInput.getText();
         try {
-            String[] columnsToSelect = {"pinjaman.id","pegawai.nama","anggota.nama","jenis_pinjaman.nama","pinjaman.ket","pinjaman.tanggal","pinjaman.jumlah_tenor","pinjaman.jumlah_pinjam","pinjaman.jumlah_cicilan","COALESCE(COUNT(angsur_pinjaman.id), 0)"};
+            String[] columnsToSelect = {"pinjaman.id","pegawai.nama","anggota.nama","jenis_pinjaman.nama","pinjaman.ket","pinjaman.tanggal","pinjaman.jumlah_tenor","CONCAT('Rp ', REPLACE(FORMAT(pinjaman.jumlah_pinjam, 0), ',', '.'))","CONCAT('Rp ', REPLACE(FORMAT(pinjaman.jumlah_cicilan, 0), ',', '.'))","COALESCE(COUNT(angsur_pinjaman.id), 0)"};
             String[] joinTable = {"jenis_pinjaman","pegawai","anggota","angsur_pinjaman"};
             String[] joinCondition = {"pinjaman.id_jenis_pinjaman = jenis_pinjaman.id","pinjaman.id_pegawai = pegawai.id","pinjaman.id_anggota = anggota.id","pinjaman.id = angsur_pinjaman.id_pinjaman"};
             String[] conditionColumns = {"pegawai.nama","anggota.nama","pinjaman.tanggal"};

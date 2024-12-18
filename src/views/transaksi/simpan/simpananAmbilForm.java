@@ -17,6 +17,13 @@ import javax.swing.JOptionPane;
 import database.DMLSQL;
 import database.DatabaseManager;
 import database.UserID;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.HashMap;
+import java.util.Locale;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 import views.layout;
 
 /**
@@ -105,6 +112,7 @@ public class simpananAmbilForm extends javax.swing.JPanel {
                 Object[] insertValues = {uuid.toString(), UserID.getUserId(), id_anggota, jenis.getValue(), "Ambil", keteranganInput.getText(),new SimpleDateFormat("yyyy-MM-dd").format(tglInput.getDate()),(Integer.parseInt(jumlahInput.getText())*-1)};
                 dmlSql.insertData("simpanan", insertColumns, insertValues);
                 dbManager.close();
+                print(id_anggota,Integer.parseInt(jumlahInput.getText()),keteranganInput.getText(),jenis.getValue(),new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id", "ID")).format(tglInput.getDate()));
                 JOptionPane.showMessageDialog(null, "Data Berhasil Disimpan!");
                 simpananAnggotaList simpananAnggotaList = new simpananAnggotaList(id_anggota);
                 simpananAnggotaList.layout = layout;
@@ -116,6 +124,26 @@ public class simpananAmbilForm extends javax.swing.JPanel {
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Query Fail. "+e.getMessage());
+        }
+    }
+    
+    private void print(String id, int amount, String note, String id_simpanan, String date) {
+        try {
+            var formatSymbols = new DecimalFormatSymbols();
+            formatSymbols.setGroupingSeparator('.');
+            formatSymbols.setDecimalSeparator(',');
+            DecimalFormat decimalFormat = new DecimalFormat("Rp #,##0", formatSymbols);
+            String path = "./src/report/notaAmbil.jasper";
+            HashMap parameter = new HashMap();
+            parameter.put("ID",id);
+            parameter.put("AMOUNT", decimalFormat.format(amount));
+            parameter.put("ID_SIMPANAN", id_simpanan);
+            parameter.put("DATE", date);
+            parameter.put("NOTE", note);
+            JasperPrint print = JasperFillManager.fillReport(path,parameter,dbManager.getConnection());
+            JasperViewer.viewReport(print, false);
+        } catch (Exception err) {
+            JOptionPane.showMessageDialog(null, "Gagal View Nota. "+err);
         }
     }
 

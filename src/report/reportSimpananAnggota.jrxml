@@ -13,14 +13,14 @@
 			<style mode="Opaque" backcolor="#F0EFEF"/>
 		</conditionalStyle>
 	</style>
-	<queryString language="SQL">
+	<queryString>
 		<![CDATA[SELECT 
     a.nama AS nama_anggota,
     a.email AS email_anggota,
     a.no_telp AS no_telp_anggota,
     a.alamat AS alamat_anggota,
     a.pekerjaan AS pekerjaan_anggota,
-    COALESCE(SUM(s.jumlah_simpan), 0) AS total_simpanan
+    CONCAT('Rp ', REPLACE(FORMAT(COALESCE(SUM(s.jumlah_simpan), 0), 0), ',', '.')) AS total_simpanan
 FROM 
     anggota a
 LEFT JOIN 
@@ -35,7 +35,7 @@ ORDER BY
 	<field name="no_telp_anggota" class="java.lang.String"/>
 	<field name="alamat_anggota" class="java.lang.String"/>
 	<field name="pekerjaan_anggota" class="java.lang.String"/>
-	<field name="total_simpanan" class="java.math.BigDecimal"/>
+	<field name="total_simpanan" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -71,7 +71,7 @@ ORDER BY
 					<textElement textAlignment="Right">
 						<font size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+					<textFieldExpression><![CDATA[new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id", "ID")).format(new java.util.Date())]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>
@@ -179,7 +179,7 @@ ORDER BY
 					<textElement verticalAlignment="Middle">
 						<font size="10" isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+					<textFieldExpression><![CDATA[new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id", "ID")).format(new java.util.Date())]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>

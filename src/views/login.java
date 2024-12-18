@@ -26,6 +26,32 @@ public class login extends javax.swing.JFrame {
         this.dbManager = new DatabaseManager();
         this.dmlSql = new DMLSQL(this.dbManager);
     }
+    
+    private void loginSubmit() {
+        try {
+            String[] columnsToSelect = {"id","email","password"};
+            String[] conditionColumns = {"email"};
+            String[] operators = {"="};
+            Object[] conditionValues = {t_uname.getText()};
+            Object[] result = dmlSql.findData("pegawai", columnsToSelect, null, null, conditionColumns, operators, conditionValues, false,false);
+            char[] password = t_pw.getPassword();
+            String passwordString = new String(password);
+            if (result.length == 0) {
+                JOptionPane.showMessageDialog(null, "Email Username Tidak Ada !!!");
+            } else {
+                if (!Password.validatePassword(passwordString,result[2].toString())) {
+                    JOptionPane.showMessageDialog(null, "Password Salah !!!");
+                } else {
+                    UserID.setUserLogin(result[0].toString());
+                    JOptionPane.showMessageDialog(null, "Login Berhasil !!!");
+                    this.setVisible(false);
+                    new layout().setVisible(true);
+                }
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Gagal Login !!!" +e);
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -68,7 +94,13 @@ public class login extends javax.swing.JFrame {
             }
         });
 
+        t_pw.setMinimumSize(new java.awt.Dimension(64, 26));
         t_pw.setPreferredSize(new java.awt.Dimension(64, 26));
+        t_pw.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                t_pwKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -109,30 +141,14 @@ public class login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
-        try {
-            String[] columnsToSelect = {"id","email","password"};
-            String[] conditionColumns = {"email"};
-            String[] operators = {"="};
-            Object[] conditionValues = {t_uname.getText()};
-            Object[] result = dmlSql.findData("pegawai", columnsToSelect, null, null, conditionColumns, operators, conditionValues, false,false);
-            char[] password = t_pw.getPassword();
-            String passwordString = new String(password);
-            if (result.length == 0) {
-                JOptionPane.showMessageDialog(null, "Email Username Tidak Ada !!!");
-            } else {
-                if (!Password.validatePassword(passwordString,result[2].toString())) {
-                    JOptionPane.showMessageDialog(null, "Password Salah !!!");
-                } else {
-                    UserID.setUserLogin(result[0].toString());
-                    JOptionPane.showMessageDialog(null, "Login Berhasil !!!");
-                    this.setVisible(false);
-                    new layout().setVisible(true);
-                }
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Gagal Login !!!" +e);
-        }
+        loginSubmit();
     }//GEN-LAST:event_loginActionPerformed
+
+    private void t_pwKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t_pwKeyPressed
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+            loginSubmit();
+        }
+    }//GEN-LAST:event_t_pwKeyPressed
 
     /**
      * @param args the command line arguments

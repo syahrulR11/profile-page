@@ -56,7 +56,7 @@ public class simpananAnggotaList extends javax.swing.JPanel {
         String nominal = "0";
         try {
             result = dmlSql.findData("anggota", columnsToSelect, null, null, conditionColumns, operators, conditionValues, false,false);
-            ResultSet result1 = dbManager.getConnection().createStatement().executeQuery("SELECT SUM(jumlah_simpan) FROM simpanan WHERE id_anggota = '"+id_anggota+"'");
+            ResultSet result1 = dbManager.getConnection().createStatement().executeQuery("SELECT CONCAT('Rp ', REPLACE(FORMAT(SUM(jumlah_simpan), 0), ',', '.')) FROM simpanan WHERE id_anggota = '"+id_anggota+"'");
             if (result1.next()) nominal = result1.getString(1);
             dbManager.close();
         } catch (SQLException e) {
@@ -91,7 +91,7 @@ public class simpananAnggotaList extends javax.swing.JPanel {
         Object[] Baris = {"ID","Jenis Simpanan","Tipe","Keterangan","Tanggal","Jumlah"};
         tableModel = new DefaultTableModel(null,Baris);
         try {
-            String[] columnsToSelect = {"simpanan.id","jenis_simpanan.nama","simpanan.tipe","simpanan.ket","simpanan.tanggal","simpanan.jumlah_simpan"};
+            String[] columnsToSelect = {"simpanan.id","jenis_simpanan.nama","simpanan.tipe","simpanan.ket","simpanan.tanggal","CONCAT('Rp ', REPLACE(FORMAT(simpanan.jumlah_simpan, 0), ',', '.'))"};
             String[] joinTable = {"jenis_simpanan"};
             String[] joinCondition = {"simpanan.id_jenis_simpanan = jenis_simpanan.id"};
             List<Object[]> results = dmlSql.selectData("simpanan", columnsToSelect, joinTable, joinCondition, null, null, null, true,false);

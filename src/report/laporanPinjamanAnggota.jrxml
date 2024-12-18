@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="38eef1d3-4754-413d-bc32-ff34de8b2ebe">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="47"/>
+	<property name="ireport.x" value="51"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
@@ -13,7 +13,7 @@
 			<style mode="Opaque" backcolor="#F0EFEF"/>
 		</conditionalStyle>
 	</style>
-	<queryString language="SQL">
+	<queryString>
 		<![CDATA[SELECT 
     a.nama AS nama_anggota,
     a.email AS email_anggota,
@@ -21,8 +21,8 @@
     a.alamat AS alamat_anggota,
     a.pekerjaan AS pekerjaan_anggota,
     p.tanggal AS tanggal_pinjaman,
-    p.jumlah_pinjam AS total_pinjaman,
-    COALESCE(SUM(ap.jumlah_cicilan), 0) AS total_pinjaman_dibayar
+    CONCAT('Rp ', REPLACE(FORMAT(p.jumlah_pinjam, 0),',','.')) AS total_pinjaman,
+    CONCAT('Rp ', REPLACE(FORMAT(COALESCE(SUM(ap.jumlah_cicilan), 0), 0),',','.')) AS total_pinjaman_dibayar
 FROM 
 	 pinjaman p
 LEFT JOIN 
@@ -41,8 +41,8 @@ ORDER BY
 	<field name="alamat_anggota" class="java.lang.String"/>
 	<field name="pekerjaan_anggota" class="java.lang.String"/>
 	<field name="tanggal_pinjaman" class="java.sql.Date"/>
-	<field name="total_pinjaman" class="java.lang.Integer"/>
-	<field name="total_pinjaman_dibayar" class="java.math.BigDecimal"/>
+	<field name="total_pinjaman" class="java.lang.String"/>
+	<field name="total_pinjaman_dibayar" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -78,7 +78,7 @@ ORDER BY
 					<textElement textAlignment="Right">
 						<font size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+					<textFieldExpression><![CDATA[new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id", "ID")).format(new java.util.Date())]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>
@@ -214,7 +214,7 @@ ORDER BY
 					<textElement verticalAlignment="Middle">
 						<font size="10" isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+					<textFieldExpression><![CDATA[new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id", "ID")).format(new java.util.Date())]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>
